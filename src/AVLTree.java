@@ -22,6 +22,7 @@ public class AVLTree {
      * public boolean empty()
      * <p>
      * Returns true if and only if the tree is empty.
+     * complexity: O(1)
      */
     public boolean empty() {
         return !root.isRealNode(); // to be replaced by student code
@@ -32,11 +33,21 @@ public class AVLTree {
      * <p>
      * Returns the info of an item with key k if it exists in the tree.
      * otherwise, returns null.
+     * complexity: O(log n)
      */
     public String search(int k) {
         return searchInner(root, k);
     }
 
+    /**
+     * private static String searchInner(IAVLNode x, int k)
+     * <p>
+     * Returns the info of an item with key k if it exists in the subtree
+     * that x is its root.
+     * otherwise, returns null.
+     * this is a recursive function
+     * complexity: O(log n)
+     */
     private static String searchInner(IAVLNode x, int k) {
         if ((x == null) || (!x.isRealNode())) {
             return null;
@@ -58,6 +69,7 @@ public class AVLTree {
      * Returns the number of re-balancing operations, or 0 if no re-balancing operations were necessary.
      * A promotion/rotation counts as one re-balance operation, double-rotation is counted as 2.
      * Returns -1 if an item with key k already exists in the tree.
+     * Complexity: O(log n)
      */
     public int insert(int k, String i) {
         AVLNode node = new AVLNode(k, i);
@@ -68,32 +80,28 @@ public class AVLTree {
             root = node;
             return 0;
         }
-        else {
-            IAVLNode parent = treePosition(k);
-            node.setParent(parent);
-            if (node.getKey() == parent.getKey()) {
-                return -1;
-            }
-            else if (node.getKey() < parent.getKey()) {
-                parent.setLeft(node);
-            } else {
-                parent.setRight(node);
-
-            }
-            if (parent.getHeight() == 0) {
-                parent.setHeight(1);
-                if (k == 2) {
-                    rebalanceAfterInsert(parent.getParent(), parent);
-                    return 1;
-                }
-                return 1 + rebalanceAfterInsert(parent.getParent(), parent);
-            }
-            else {
-                return 0;
-            }
-        }
+        IAVLNode parent = treePosition(k);
+        node.setParent(parent);
+        if (node.getKey() == parent.getKey())
+            return -1;
+        else if (node.getKey() < parent.getKey())
+            parent.setLeft(node);
+        else
+            parent.setRight(node);
+        if (parent.getHeight() != 0)
+            // if parent is not a leaf then no rebalance is needed
+            return 0;
+        parent.setHeight(1);
+        return 1 + rebalanceAfterInsert(parent.getParent(), parent);
     }
 
+    /**
+     * private int rebalanceAfterInsert(IAVLNode node, IAVLNode son)
+     * <p>
+     * Recursively rebalance the tree and returns the number of re-balancing operations done
+     * input are node and its son that their rank difference might be illegal
+     * Complexity: O(log n)
+     */
     private int rebalanceAfterInsert(IAVLNode node, IAVLNode son) {
         if ((node == null) || (!node.isRealNode())) {
             return 0;
@@ -135,53 +143,93 @@ public class AVLTree {
         }
     }
 
+    /** private int getLeftHeightDiff(IAVLNode node)
+     * <p>
+     * return the height difference between node and its left son
+     * Complexity: O(1)
+     */
     private int getLeftHeightDiff(IAVLNode node) {
-        int diffLeft = node.getHeight() + 1;
-        if (node.getLeft() != null) {
-            diffLeft = node.getHeight() - node.getLeft().getHeight();
-        }
-        return diffLeft;
+        return node.getHeight() - node.getLeft().getHeight();
     }
 
+    /** private int getRightHeightDiff(IAVLNode node)
+     * <p>
+     * return the height difference between node and its right son
+     * Complexity: O(1)
+     */
     private int getRightHeightDiff(IAVLNode node) {
-        int diffRight = node.getHeight() + 1;
-        if (node.getRight() != null) {
-            diffRight = node.getHeight() - node.getRight().getHeight();
-        }
-        return diffRight;
+        return node.getHeight() - node.getRight().getHeight();
     }
 
+    /** private boolean isBalanced(int diffRight, int diffLeft)
+     * <p>
+     * check if the node has legal height difference with its sons
+     * Complexity O(1)
+     */
     private boolean isBalanced(int diffRight, int diffLeft) {
         return ((diffRight == 1) && (diffLeft == 1)) || ((diffRight == 1) && (diffLeft == 2)) || ((diffRight == 2) && (diffLeft == 1));
     }
 
+    /** private void promote(IAVLNode node)
+     * <p>
+     * promote node's rank(=height) by 1
+     * Complexity: O(1)
+     */
     private void promote(IAVLNode node) {
         node.setHeight(node.getHeight() + 1);
     }
 
+    /** private void demote(IAVLNode node)
+     * <p>
+     * demote node's rank(=height) by 1
+     * Complexity: O(1)
+     */
     private void demote(IAVLNode node) {
         node.setHeight(node.getHeight() - 1);
     }
 
+    /** private void demote(IAVLNode node)
+     * <p>
+     * demote node's rank(=height) by 2
+     * Complexity: O(1)
+     */
     private void doubleDemote(IAVLNode node) {
         node.setHeight(node.getHeight() - 2);
     }
 
+    /**
+     * private void rotateRight(IAVLNode son, IAVLNode parent)
+     * <p>
+     * perform a right rotation on son and parent nodes
+     * Complexity: O(1)
+     */
     private void rotateRight(IAVLNode son, IAVLNode parent) {
         parent.setLeft(son.getRight());
         parent.getLeft().setParent(parent);
         son.setRight(parent);
-        rotate(son, parent);
+        updateParentsAfterRotation(son, parent);
     }
 
+    /**
+     * private void rotateLeft(IAVLNode son, IAVLNode parent)
+     * <p>
+     * perform a left rotation on son and parent nodes
+     * Complexity: O(1)
+     */
     private void rotateLeft(IAVLNode son, IAVLNode parent) {
         parent.setRight(son.getLeft());
         parent.getRight().setParent(parent);
         son.setLeft(parent);
-        rotate(son, parent);
+        updateParentsAfterRotation(son, parent);
     }
 
-    private void rotate(IAVLNode son, IAVLNode parent) {
+    /**
+     * private void updateParentsAfterRotation(IAVLNode son, IAVLNode parent)
+     * <p>
+     * Updates the parent fields for nodes after a rotation
+     * Complexity: O(1)
+     */
+    private void updateParentsAfterRotation(IAVLNode son, IAVLNode parent) {
         son.setParent(parent.getParent());
         parent.setParent(son);
         if (son.getParent() != null) {
@@ -196,11 +244,23 @@ public class AVLTree {
         }
     }
 
+    /**
+     * private void doubleRotateLeftRight(IAVLNode son, IAVLNode parent)
+     * <p>
+     * perform a double rotation (left then right) on son and parent nodes
+     * Complexity: O(1)
+     */
     private void doubleRotateLeftRight(IAVLNode son, IAVLNode parent) {
         rotateLeft(son.getRight(), son);
         rotateRight(parent.getLeft(), parent);
     }
 
+    /**
+     * private void doubleRotateLeftRight(IAVLNode son, IAVLNode parent)
+     * <p>
+     * perform a double rotation (right then left) on son and parent nodes
+     * Complexity: O(1)
+     */
     private void doubleRotateRightLeft(IAVLNode son, IAVLNode parent) {
         rotateRight(son.getLeft(), son);
         rotateLeft(parent.getRight(), parent);
@@ -210,6 +270,7 @@ public class AVLTree {
      * precondition: !empty()
      * return the IAVLNode with key x if exists
      * else returns the Node that should be its parent
+     * Complexity: O(1)
      */
     private IAVLNode treePosition(int k) {
         IAVLNode x = root;
@@ -229,7 +290,6 @@ public class AVLTree {
         return y;
     }
 
-
     /**
      * public int delete(int k)
      *
@@ -238,6 +298,7 @@ public class AVLTree {
      * Returns the number of re-balancing operations, or 0 if no re-balancing operations were necessary.
      * A promotion/rotation counts as one re-balance operation, double-rotation is counted as 2.
      * Returns -1 if an item with key k was not found in the tree.
+     * Complexity: O(log n)
      */
     public int delete(int k)
     {
@@ -248,35 +309,46 @@ public class AVLTree {
         if (x.getKey() != k) {
             return -1;
         }
-        // leaf
+        // is x is a leaf
         if (x.getHeight() == 0 ) {
             if (x.getParent() == null) {
                 root = virtualNode;
             }
             else if (x.getParent().getRight() == x) {
                 x.getParent().setRight(virtualNode);
-
             }
             else {
                 x.getParent().setLeft(virtualNode);
             }
         }
-        // two sons
+        // is x has two sons
         else if (x.getLeft().isRealNode() && (x.getRight().isRealNode())) {
+            // find x's successor
             IAVLNode suc = successor(x);
-            deleteUnaryNode(suc); // remove suc, it is unary
+            // remove successor from tree, it is unary
+            deleteUnaryNode(suc);
+            // replace x with its successor
             suc.setRight(x.getRight());
             suc.setLeft(x.getLeft());
             suc.setParent(x.getParent());
             suc.setHeight(x.getHeight());
         }
-        // unary
+        // if x is unary
         else {
             deleteUnaryNode(x);
         }
         return rebalanceAfterDelete(x.getParent());
     }
 
+    /**
+     * private int rebalanceAfterDelete(IAVLNode node)
+     *
+     * Recursively perform rebalancing operations until the tree is balanced
+     * Returns the number of re-balancing operations done.
+     * the input node x is the node that might have
+     * illegal height difference with its sons
+     * Complexity: O(log n)
+     */
     private int rebalanceAfterDelete(IAVLNode node) {
         if ((node == null) || (!node.isRealNode())) {
             return 0;
@@ -292,6 +364,7 @@ public class AVLTree {
             return 1 + rebalanceAfterDelete(node.getParent());
         }
         IAVLNode son;
+        // cases 2,3,4 if the illegal height difference is on left side
         if (diffLeft == 3) {
             son = node.getRight();
             int sonDiffRight = getRightHeightDiff(son);
@@ -318,6 +391,7 @@ public class AVLTree {
                 return 5 + rebalanceAfterDelete(node.getParent().getParent());
             }
         }
+        // cases 2,3,4 if the illegal height difference is on right side
         else {
             son = node.getLeft();
             int sonDiffRight = getRightHeightDiff(son);
@@ -348,6 +422,12 @@ public class AVLTree {
 
     }
 
+    /**
+     * private void deleteUnaryNode(IAVLNode x)
+     * Deletes node x from tree
+     * precondition: x is unary node
+     * Complexity: O(1)
+     */
     private void deleteUnaryNode(IAVLNode x) {
         if (x.getRight().isRealNode()) {
             if (x.getParent() == null) {
@@ -381,6 +461,12 @@ public class AVLTree {
         }
     }
 
+    /**
+     * private IAVLNode successor(IAVLNode node)
+     * Returns the successor of node is tree
+     * If node is the maximum in tree, returns null
+     * Complexity: O(log n)
+     */
     private IAVLNode successor(IAVLNode node) {
         if (node.getRight().isRealNode()) {
             return getMinNode(node.getRight());
