@@ -479,6 +479,12 @@ public class AVLTree {
         return parent;
     }
 
+    /**
+     * private IAVLNode getMinNode(IAVLNode node)
+     * <p>
+     * Return the min node in mode's subtree
+     * Complexity O(log n)
+     */
     private IAVLNode getMinNode(IAVLNode node) {
         while (node.getLeft().isRealNode()) {
             node = node.getLeft();
@@ -486,6 +492,12 @@ public class AVLTree {
         return node;
     }
 
+    /**
+     * private IAVLNode getMaxnNode(IAVLNode node)
+     * <p>
+     * Return the max node in mode's subtree
+     * Complexity O(log n)
+     */
     private IAVLNode getMaxNode(IAVLNode node) {
         while (node.getRight().isRealNode()) {
             node = node.getRight();
@@ -498,6 +510,7 @@ public class AVLTree {
      *
      * Returns the info of the item with the smallest key in the tree,
      * or null if the tree is empty.
+     * Complexity: O(log n)
      */
     public String min()
     {
@@ -514,6 +527,7 @@ public class AVLTree {
      *
      * Returns the info of the item with the largest key in the tree,
      * or null if the tree is empty.
+     * Complexity: O(log n)
      */
     public String max()
     {
@@ -530,6 +544,7 @@ public class AVLTree {
      *
      * Returns a sorted array which contains all keys in the tree,
      * or an empty array if the tree is empty.
+     * Complexity: O(n)
      */
     public int[] keysToArray()
     {
@@ -539,6 +554,13 @@ public class AVLTree {
         return keys;// to be replaced by student code
     }
 
+    /**
+     * private int keysToArrayInner(IAVLNode node, int[] keys, int i)
+     *
+     * Fills the keys in a sorted array from index i
+     * Returns next index in array (this is a recursive function)
+     * Complexity: O(n)
+     */
     private int keysToArrayInner(IAVLNode node, int[] keys, int i) {
         if (node.isRealNode()) {
             i = keysToArrayInner(node.getLeft(), keys, i);
@@ -554,6 +576,7 @@ public class AVLTree {
      * Returns an array which contains all info in the tree,
      * sorted by their respective keys,
      * or an empty array if the tree is empty.
+     * Complexity: O(n)
      */
     public String[] infoToArray()
     {
@@ -562,6 +585,13 @@ public class AVLTree {
         return info;// to be replaced by student code
     }
 
+    /**
+     * private int infosToArrayInner(IAVLNode node, int[] keys, int i)
+     *
+     * Fills the infos in a sorted array from index i
+     * Returns next index in array (this is a recursive function)
+     * Complexity: O(n)
+     */
     private int infoToArrayInner(IAVLNode node, String[] info, int i) {
         if (node.isRealNode()) {
             i = infoToArrayInner(node.getLeft(), info, i);
@@ -575,11 +605,18 @@ public class AVLTree {
      * public int size()
      *
      * Returns the number of nodes in the tree.
+     * Complexity: O(n)
      */
     public int size() {
         return sizeInner(root);
     }
 
+    /**
+     * private int sizeInner(IAVLNode node)
+     *
+     * Returns the number of nodes in the node's subtree.
+     * Complexity: O(n)
+     */
     private int sizeInner(IAVLNode node) {
         if ((node == null) || (!node.isRealNode())) {
             return 0;
@@ -591,6 +628,7 @@ public class AVLTree {
      * public int getRoot()
      *
      * Returns the root AVL node, or null if the tree is empty
+     * Complexity O(1);
      */
     public IAVLNode getRoot()
     {
@@ -605,6 +643,7 @@ public class AVLTree {
      *
      * precondition: search(x) != null (i.e. you can also assume that the tree is not empty)
      * postcondition: none
+     * Complexity: O(log n)
      */
     public AVLTree[] split(int x)
     {
@@ -640,6 +679,7 @@ public class AVLTree {
      *
      * precondition: keys(t) < x < keys() or keys(t) > x > keys(). t/tree might be empty (rank = -1).
      * postcondition: none
+     * Complexity: O(log n)
      */
     public int join(IAVLNode x, AVLTree t)
     {
@@ -673,8 +713,11 @@ public class AVLTree {
     }
 
     /**
-     *  join the trees to the node
-     *  precondition: keys(t1) < x < keys(t2), trees not empty
+     *  private int innerJoin(AVLTree t1, IAVLNode x, AVLTree t2)
+     *
+     *  Join the trees to the node
+     *  Precondition: keys(t1) < x < keys(t2), trees not empty
+     *  Complexity: O(log n)
      */
     private int innerJoin(AVLTree t1, IAVLNode x, AVLTree t2) {
         // if x can be root
@@ -730,6 +773,11 @@ public class AVLTree {
         }
     }
 
+    /**
+     * private int joinToTree(IAVLNode x)
+     * Adds node x to tree
+     * Complexity: O(log n)
+     */
     private int joinToTree(IAVLNode x) {
         x.setLeft(virtualNode);
         x.setRight(virtualNode);
