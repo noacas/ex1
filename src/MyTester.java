@@ -1,6 +1,146 @@
 public class MyTester {
 
     public static void main(String[] args) {
+        AVLTree[] res;
+        AVLTree avlTree = new AVLTree();
+        for (int i = 0; i < 100; i++) {
+            avlTree.insert(i, "num" + i);
+        }
+        res = avlTree.split(59);
+        System.out.println(res[0].size());
+        System.out.println(res[1].size());
+    }
+
+    public static boolean testRemove() {
+        AVLTree tree = new AVLTree();
+        if (!tree.empty()) {
+            return false;
+        }
+        int[] values = new int[]{16, 24, 36, 19, 44, 28, 61, 74, 83, 64, 52, 65, 86, 93, 88};
+        for (int val : values) {
+            tree.insert(val, "" + val);
+        }
+        if (!tree.min().equals("16")) {
+            return false;
+        }
+        if (!tree.max().equals("93")) {
+            return false;
+        }
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        tree.delete(88);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(88) != null) {
+            return false;
+        }
+
+        tree.delete(19);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(19) != null) {
+            return false;
+        }
+
+        tree.delete(16);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(16) != null) {
+            return false;
+        }
+
+        tree.delete(28);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(16) != null) {
+            return false;
+        }
+        tree.delete(24);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(24) != null) {
+            return false;
+        }
+
+        tree.delete(36);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(36) != null) {
+            return false;
+        }
+
+        tree.delete(52);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(52) != null) {
+            return false;
+        }
+
+        tree.delete(93);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(93) != null) {
+            return false;
+        }
+
+        tree.delete(86);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(86) != null) {
+            return false;
+        }
+
+        tree.delete(83);
+        if (!checkBalanceOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (!checkOrderingOfTree(tree.getRoot())) {
+            return false;
+        }
+        if (tree.search(83) != null) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean checkBalanceOfTree(AVLTree.IAVLNode current) {
