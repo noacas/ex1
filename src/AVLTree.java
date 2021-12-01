@@ -1,5 +1,3 @@
-import java.io.PrintStream;
-
 /**
  *
  * AVLTree
@@ -711,6 +709,11 @@ public class AVLTree {
             tempTree.getRoot().setParent(null);
             result[changeIndex].join(son, tempTree);
         }
+        // the trees joined did not have correct min/max pointers
+        result[0].min = getMinNode(result[0].root);
+        result[1].min = getMinNode(result[1].root);
+        result[0].max = getMaxNode(result[0].root);
+        result[1].max = getMaxNode(result[1].root);
         return result;
     }
 
@@ -852,61 +855,6 @@ public class AVLTree {
         return 1 + rebalanceAfterInsert(parent.getParent(), x);
     }
 
-
-    // functions for printing
-    public void print(PrintStream os) {
-        print(os, root);
-    }
-
-    private void print(PrintStream os, IAVLNodeOur node) {
-        os.print(traversePreOrder(node));
-    }
-
-    private String traversePreOrder(IAVLNodeOur root) {
-
-        if (root == null) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append(root.getKey() + " rank is " + root.getHeight() + " the size is " + root.getSize());
-
-        String pointerRight = "└──";
-        String pointerLeft = (root.getRight() != null) ? "├──" : "└──";
-
-        traverseNodes(sb, "", pointerLeft, root.getLeft(), root.getRight() != null);
-        traverseNodes(sb, "", pointerRight, root.getRight(), false);
-
-        sb.append("\n");
-        return sb.toString();
-    }
-
-
-    private void traverseNodes(StringBuilder sb, String padding, String pointer, IAVLNodeOur node,
-                              boolean hasRightSibling) {
-        if (node != null) {
-            sb.append("\n");
-            sb.append(padding);
-            sb.append(pointer);
-            sb.append(node.getKey() + " rank is " + node.getHeight() + " the size is " + node.getSize());
-
-            StringBuilder paddingBuilder = new StringBuilder(padding);
-            if (hasRightSibling) {
-                paddingBuilder.append("│  ");
-            } else {
-                paddingBuilder.append("   ");
-            }
-
-            String paddingForBoth = paddingBuilder.toString();
-            String pointerRight = "└──";
-            String pointerLeft = (node.getRight() != null) ? "├──" : "└──";
-
-            traverseNodes(sb, paddingForBoth, pointerLeft, node.getLeft(), node.getRight() != null);
-            traverseNodes(sb, paddingForBoth, pointerRight, node.getRight(), false);
-        }
-    }
-
     /**
      * public interface IAVLNode
      * ! Do not delete or modify this - otherwise all tests will fail !
@@ -927,6 +875,7 @@ public class AVLTree {
 
     /**
      * public interface IAVLNodeOur
+     * add information about size of subtree
      */
     public interface IAVLNodeOur extends IAVLNode{
         public void setLeft(IAVLNodeOur node); // Sets left child.
@@ -948,7 +897,7 @@ public class AVLTree {
      *
      * This class can and MUST be modified (It must implement IAVLNode).
      */
-    public static class AVLNode implements IAVLNodeOur{
+    public static class AVLNode implements IAVLNode, IAVLNodeOur{
 
         private static final int virtualNodeHeight = -1;
         private int key;

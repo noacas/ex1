@@ -1,13 +1,16 @@
+import java.util.Arrays;
+
 public class MyTester {
 
     public static void main(String[] args) {
-        AVLTree[] res;
         AVLTree avlTree = new AVLTree();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             avlTree.insert(i, "num" + i);
         }
-        res = avlTree.split(59);
+        AVLTree[] res = avlTree.split(786);
         System.out.println(res[0].size());
+        System.out.println(res[1].max());
+        System.out.println(res[1].min());
         System.out.println(res[1].size());
     }
 
