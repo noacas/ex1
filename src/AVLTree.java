@@ -402,6 +402,8 @@ public class AVLTree {
     private void updateMinMaxAfterDelete(IAVLNodeOur deletedNode) {
         if (max == deletedNode) {
             max = getMaxNode(root);
+            // tree not empty so deleteNode could only be mim or max
+            return;
         }
         if (min == deletedNode) {
             min = getMinNode(root);
