@@ -396,6 +396,7 @@ public class AVLTree {
      * private void updateMinMaxAfterDelete(IAVLNodeOur deletedNode)
      *
      * Update tree pointers to min and max node after the delete of the node
+     * precondition: tree not empty after the delete
      * Complexity: O(log n)
      */
     private void updateMinMaxAfterDelete(IAVLNodeOur deletedNode) {
