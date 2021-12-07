@@ -359,6 +359,8 @@ public class AVLTree {
         if (x.getHeight() == 0) {
             if (x.getParent() == null) {
                 root = virtualNode;
+                this.min = null;
+                this.max = null;
                 return 0;
             }
             else if (x.getParent().getRight() == x) {
@@ -385,7 +387,24 @@ public class AVLTree {
         else {
             deleteUnaryNode(x);
         }
-        return rebalanceAfterDelete(x.getParent());
+        int res = rebalanceAfterDelete(x.getParent());
+        updateMinMaxAfterDelete(x);
+        return res;
+    }
+
+    /**
+     * private void updateMinMaxAfterDelete(IAVLNodeOur deletedNode)
+     *
+     * Update tree pointers to min and max node after the delete of the node
+     * Complexity: O(log n)
+     */
+    private void updateMinMaxAfterDelete(IAVLNodeOur deletedNode) {
+        if (max == deletedNode) {
+            max = getMaxNode(root);
+        }
+        if (min == deletedNode) {
+            min = getMinNode(root);
+        }
     }
 
     /**
